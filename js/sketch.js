@@ -67,6 +67,10 @@ class Sketch {
     var floor={id:3, x1:0, y1:this.floorheight,
           x2:this.ctx.canvas.width,y2:this.floorheight,colour:"white"};
 
+    //var bodylength=100;
+    //var body={id:4, x1:this.startx, y1:this.floorheight-this.leglength-bodylength,
+      //        x2:this.startx,y2:this.floorheight-this.leglength,colour:"green"};
+
     this.sticks = {floor:floor,leg1:leg1, leg2:leg2}
 
     this.leg1onground=true;
@@ -74,6 +78,7 @@ class Sketch {
     this.hinge = 20;
     this.leganglespeed=1;
     this.maxlegangle=20;
+    this.direction=1;
   }
 
 
@@ -87,8 +92,19 @@ class Sketch {
 
     this.moveLegs()
 
+    if(this.sticks["leg1"].x1>this.ctx.canvas.width||this.sticks["leg1"].x1<0){
+      this.changeDirection();
+
     }
 
+    }
+
+  changeDirection(){
+    this.direction*=-1;
+    var leg1=this.sticks["leg1"];
+    this.sticks["leg1"]=this.sticks["leg2"];
+    this.sticks["leg2"]=leg1;
+  }
   drawStick(stick){
     this.drawLine(stick.x1,stick.y1,stick.x2,stick.y2,stick.colour);
   }
@@ -115,12 +131,18 @@ class Sketch {
       groundleg = "leg2";
       airleg = "leg1";
     }
-    var groundfootx = this.sticks[groundleg].x2;
-    var groundfooty =  this.sticks[groundleg].y2;
-    var hipx = groundfootx + Math.sin(this.legangle*Math.PI/180)*this.leglength;
-    var hipy = groundfooty - Math.cos(this.legangle*Math.PI/180)*this.leglength;
-    var airfootx = this.sticks[groundleg].x2 + 2*Math.sin(this.legangle*Math.PI/180)*this.leglength;
-    var airfooty = this.sticks[groundleg].y2;
+    groundfootx = this.sticks[groundleg].x2;
+    groundfooty =  this.sticks[groundleg].y2;
+    if(this.direction==1){
+       hipx = groundfootx + Math.sin(this.legangle*Math.PI/180)*this.leglength;
+       airfootx = this.sticks[groundleg].x2 + 2*Math.sin(this.legangle*Math.PI/180)*this.leglength;
+    }else if(this.direction==-1){
+       hipx = groundfootx - Math.sin(this.legangle*Math.PI/180)*this.leglength;
+       airfootx = this.sticks[groundleg].x2 - 2*Math.sin(this.legangle*Math.PI/180)*this.leglength;
+    }
+
+    hipy = groundfooty - Math.cos(this.legangle*Math.PI/180)*this.leglength;
+    airfooty = this.sticks[groundleg].y2;
 
     this.sticks[groundleg].x1 = hipx;
     this.sticks[groundleg].y1 = hipy;
