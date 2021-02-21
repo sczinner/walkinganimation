@@ -33,10 +33,10 @@ class Sketch {
     window.requestAnimationFrame(this.timeDraw.bind(this));
     let diff;
     diff = performance.now() - this.then;
-    // if (diff < this.fps_interval) {
-    // // not enough time has passed, so we request next frame and give up on this render
-    //   return;
-    // }
+    if (diff < this.fps_interval) {
+    // not enough time has passed, so we request next frame and give up on this render
+      return;
+    }
     // updated last frame rendered time
     this.then = performance.now();
     // now draw
@@ -120,6 +120,9 @@ class Sketch {
     var leg1=this.sticks["leg1"];
     this.sticks["leg1"]=this.sticks["leg2"];
     this.sticks["leg2"]=leg1;
+    var arm1=this.sticks["arm1"];
+    this.sticks["arm1"]=this.sticks["arm2"];
+    this.sticks["arm2"]=arm1;
   }
   drawStick(stick){
     this.drawLine(stick.x1,stick.y1,stick.x2,stick.y2,stick.colour);
