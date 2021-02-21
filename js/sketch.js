@@ -56,9 +56,19 @@ class Sketch {
   }
 
   setup() {
-    this.stickGuy1= new stickFigure(1);
-  }
+    this.ctx.canvas.width = window.innerWidth;
+    this.ctx.canvas.height = window.innerHeight;
 
+    this.stickGuy1= new stickFigure(1);
+     this.ctx.canvas.addEventListener('click', (event)=>
+      this.stickGuy1.destination=event.pageX);
+
+
+
+
+
+
+  }
 
 
   draw() {
@@ -68,6 +78,7 @@ class Sketch {
     this.stickGuy1.draw();
 
     this.stickGuy1.move();
+
 
 
     }
@@ -120,6 +131,7 @@ class stickFigure {
     this.leganglespeed=1;
     this.maxlegangle=20;
     this.direction=1;
+    this.destination=250;
   }
 
   draw(){
@@ -140,12 +152,22 @@ class stickFigure {
   }
 
   move(){
-    this.moveLegs();
-    this.moveBody();
-    this.moveArms();
-    this.moveHead();
-    if(this.sticks["leg1"].x1>ctx.canvas.width||this.sticks["leg1"].x1<0){
-      this.changeDirection();
+
+    if(this.destination!=this.sticks["leg1"].x1){
+      if(this.destination>this.sticks["leg1"].x1){
+        if(this.direction==-1){
+          this.changeDirection();
+        }
+      }else{
+        if(this.direction==1){
+            this.changeDirection();
+        }
+      }
+      this.moveLegs();
+      this.moveBody();
+      this.moveArms();
+      this.moveHead();
+
     }
   }
 
@@ -226,11 +248,30 @@ class stickFigure {
     hipy = groundfooty - Math.cos(this.legangle*Math.PI/180)*this.leglength;
     airfooty = this.sticks[groundleg].y2;
 
+    //dont step past destination
+    if(this.direction==1&&(airfootx>this.destination)){
+      airfootx=this.destination;
+      this.leg1onground=!this.leg1onground;
+      this.legangle*=-1;
+      hipx=(this.destination+groundfootx)/2;
+      hipy=airfooty-Math.sqrt(Math.pow(this.leglength,2)-Math.pow(this.destination-hipx,2));
+
+    }else if(this.direction==-1&&(airfootx<this.destination)){
+      airfootx=this.destination;
+      this.leg1onground=!this.leg1onground;
+      this.legangle*=-1;
+      hipx=(this.destination+groundfootx)/2;
+      hipy=airfooty-Math.sqrt(Math.pow(this.leglength,2)-Math.pow(this.destination-hipx,2));
+
+    }
+
     this.sticks[groundleg].x1 = hipx;
     this.sticks[groundleg].y1 = hipy;
     this.sticks[airleg].x1 = hipx;
     this.sticks[airleg].y1 = hipy;
     this.sticks[airleg].x2 = airfootx;
+
+
 
   }
 }
