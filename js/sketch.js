@@ -56,6 +56,36 @@ class Sketch {
   }
 
   setup() {
+    this.stickGuy1= new stickFigure(1);
+  }
+
+
+
+  draw() {
+    this.background("black");
+    this.ctx.lineWidth = 10;
+
+    this.stickGuy1.draw();
+
+    this.stickGuy1.move();
+
+
+    }
+
+
+
+
+
+
+
+
+
+
+}
+
+class stickFigure {
+  constructor(id) {
+    this.id = id;
     this.floorheight = 650;
     this.leglength=100;
     this.startx=150;
@@ -65,7 +95,7 @@ class Sketch {
     var leg2={id:2, x1:this.startx, y1:this.floorheight-this.leglength,
         x2:this.startx,y2:this.floorheight,colour:"blue"};
     var floor={id:3, x1:0, y1:this.floorheight,
-          x2:this.ctx.canvas.width,y2:this.floorheight,colour:"white"};
+          x2:ctx.canvas.width,y2:this.floorheight,colour:"white"};
 
     this.bodylength=100;
     var body={id:4, x1:this.startx, y1:this.floorheight-this.leglength-this.bodylength,
@@ -92,28 +122,32 @@ class Sketch {
     this.direction=1;
   }
 
-
-
-  draw() {
-    this.background("black");
-
+  draw(){
     for(var propt in this.sticks){
       this.drawStick(this.sticks[propt]);
     }
     //draw head
-    this.solidCirc(this.head.x,this.head.y,this.head.r,this.head.colour)
+    this.drawhead(this.head.x,this.head.y,this.head.r,this.head.colour)
+  }
 
+  drawhead(x,y,r,col){
+    ctx.strokeStyle = col;
+    ctx.strokeRect(x-r, y-r, r*2, r*2);
+  }
 
+  drawStick(stick){
+    drawLine(stick.x1,stick.y1,stick.x2,stick.y2,stick.colour);
+  }
+
+  move(){
     this.moveLegs();
     this.moveBody();
     this.moveArms();
     this.moveHead();
-
-    if(this.sticks["leg1"].x1>this.ctx.canvas.width||this.sticks["leg1"].x1<0){
+    if(this.sticks["leg1"].x1>ctx.canvas.width||this.sticks["leg1"].x1<0){
       this.changeDirection();
     }
-
-    }
+  }
 
   changeDirection(){
     this.direction*=-1;
@@ -123,9 +157,6 @@ class Sketch {
     var arm1=this.sticks["arm1"];
     this.sticks["arm1"]=this.sticks["arm2"];
     this.sticks["arm2"]=arm1;
-  }
-  drawStick(stick){
-    this.drawLine(stick.x1,stick.y1,stick.x2,stick.y2,stick.colour);
   }
   moveHead(){
     this.head.x=this.sticks['leg1'].x1;
@@ -202,20 +233,11 @@ class Sketch {
     this.sticks[airleg].x2 = airfootx;
 
   }
-
-
-  drawLine(x1,y1,x2,y2,col){
-    this.ctx.beginPath();
-    this.ctx.moveTo(x1, y1);
-    this.ctx.lineTo(x2, y2);
-    ctx.strokeStyle = col;
-    this.ctx.stroke();
-  }
-  solidCirc(x,y,r,col){
-    this.ctx.beginPath();
-    this.ctx.arc(x, y, r, 0, 2 * Math.PI);
-    this.ctx.fillStyle = col;
-    this.ctx.fill();
-  }
-
 }
+function drawLine(x1,y1,x2,y2,col){
+    ctx.beginPath();
+    ctx.moveTo(x1, y1);
+    ctx.lineTo(x2, y2);
+    ctx.strokeStyle = col;
+    ctx.stroke();
+  }
