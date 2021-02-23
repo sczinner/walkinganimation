@@ -73,7 +73,7 @@ class Sketch {
 
   draw() {
     this.background("black");
-    this.ctx.lineWidth = 10;
+    this.ctx.lineWidth = 20;
 
     this.stickGuy1.draw();
 
@@ -128,8 +128,8 @@ class stickFigure {
     this.leg1onground=true;
     this.legangle=0;///from -vertical (because +y is down)
     this.hinge = 20;
-    this.leganglespeed=1;
-    this.maxlegangle=20;
+    this.leganglespeed=1.5;
+    this.maxlegangle=20 ;
     this.direction=1;
     this.destination=250;
   }
@@ -237,6 +237,8 @@ class stickFigure {
     }
     groundfootx = this.sticks[groundleg].x2;
     groundfooty =  this.sticks[groundleg].y2;
+
+    //sines and cosine should have a lookup table in the future for efficiency
     if(this.direction==1){
        hipx = groundfootx + Math.sin(this.legangle*Math.PI/180)*this.leglength;
        airfootx = this.sticks[groundleg].x2 + 2*Math.sin(this.legangle*Math.PI/180)*this.leglength;
